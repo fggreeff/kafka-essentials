@@ -16,8 +16,9 @@ These instructions will get you a copy of the project up and running on your loc
 Step by step instructions on how to get a working version of the project on your local machine, such as
 
 - Clone repository
-- Start zookeeper server `zookeeper-server-start.sh config/zookeeper.properties`
+- Start Zookeeper server `zookeeper-server-start.sh config/zookeeper.properties`
 - Start Kafka service `kafka-server-start.sh config/server.properties`
+- Start consumer `kafka-console-consumer.sh --bootstrap-server <127.0.0.1:9092> --topic <my_topic> --group <my_consumer_gp>`
 
 # Source
 
