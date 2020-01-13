@@ -33,7 +33,16 @@ More info on a topic ```kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic TOPIC
 
 Delete topic (Don't do this in windows) ```kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic TOPIC_NAME --delete```
 
+### Run code scripts
+
+Using Code (example of running producer)
+- Open the codebase (intellij) and navigate to ``src/main/java/com/github/fggreeff/kafka/tutorial1/``
+- Run the ``ProducerDemo`` file by right-clicking on the file and choose `Run`
+
+
 ### Producer
+
+Using kafka commands
 
 Produce to topic ```kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic TOPIC_NAME```
 
@@ -47,6 +56,8 @@ kafka-console-producer --broker-list 127.0.0.1:9092 --topic TOPIC_NAME --propert
 ```
 
 ### Consumer
+
+Using kafka commands
 
 Consume from beginning: ```kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic TOPIC_NAME --from-beginning```
 
@@ -62,6 +73,14 @@ Reset offset by using: `--reset-offsets`
 Consumer with Keys: 
 ```
 kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic TOPIC_NAME --from-beginning --property print.key=true --property key.separator=,
+```
+
+### Zookeeper
+Validate Zookeeper running / health 
+```
+echo stat | nc <zookeeper ip> 2181
+echo mntr | nc <zookeeper ip> 2181
+echo isro  | nc <zookeeper ip> 2181
 ```
 
 ### UI
