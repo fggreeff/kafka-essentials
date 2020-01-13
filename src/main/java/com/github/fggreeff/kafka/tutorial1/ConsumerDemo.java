@@ -32,7 +32,7 @@ public class ConsumerDemo {
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG,groupId);
-        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest"); // see usage for "latest"
+        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest"); // earliest (all messages from beginning). While for "latest" (only new messages)
 
         //create consumer
         KafkaConsumer<String,String> consumer = new KafkaConsumer<String, String>(properties);
