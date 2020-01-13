@@ -28,7 +28,7 @@ public class ProducerDemoWithKeys {
         for (int i=0;i<10;i++) {
             String topic = "first_topic";
             String value = "hello world! " + Integer.toString(i);
-            String key = "id_" +Integer.toString(i);
+            String key = "id_" +Integer.toString(i); // By giving a key, we have the same key go to the same partition
 
             //producer record
             ProducerRecord<String, String> record = new ProducerRecord<String, String>(topic, key, value);
