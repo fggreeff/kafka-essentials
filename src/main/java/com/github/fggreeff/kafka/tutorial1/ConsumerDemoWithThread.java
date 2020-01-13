@@ -110,7 +110,7 @@ public class ConsumerDemoWithThread {
 
         public void shutdown() {
             // wakeup() interrupt consumer.poll()
-            consumer.wakeup();
+            consumer.wakeup(); // This will throw an exception called wakeup
         }
     }
 }
