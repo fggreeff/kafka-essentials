@@ -19,6 +19,7 @@ Take note of the location where kafka is installed
 Step by step instructions on how to get a working version of the project on your local machine, such as
 
 - Clone repository
+- Run `mvn clean install` - see if there are any errors
 - Start Zookeeper server `zookeeper-server-start.sh config/zookeeper.properties` or for homebrew use `zkServer start`
 - Start Kafka service `kafka-server-start.sh config/server.properties`
 - Start consumer `kafka-console-consumer.sh --bootstrap-server <127.0.0.1:9092> --topic <my_topic> --group <my_consumer_gp>`
@@ -62,6 +63,12 @@ kafka-console-producer --broker-list 127.0.0.1:9092 --topic TOPIC_NAME --propert
 > key,value
 > another key,another value
 ```
+
+A little more on acks:
+- `acks=0` is performant, useful on metrics & logging (cases where we can manage losing a msg if needs be)
+- `acks=1` is the default, the leader acknowledges every request
+- `acks=all` the replicas  acknowledges, this adds latency & guarantees. (set min.insync.replicas)
+
 
 ### Consumer
 

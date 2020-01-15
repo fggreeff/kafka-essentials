@@ -10,10 +10,13 @@ import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
 import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
+import org.apache.kafka.clients.producer.*;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +29,8 @@ public class TwitterProducer {
     String consumerSecret = "vI8esA3rhHhbT8VOWvuDG7NTTIw4gOanKDETR4h51RD9zHNoes";
     String token = "395260659-Hs3jQsqC9LJyo4xAW4q6MU9ZhpefMz1ckRlBK2r4";
     String secret = "FICrCoBDxe6Keeeaf7sC9JhI7DFuABWJdOCjv7uV9G2CP";
+
+    List<String> terms = Lists.newArrayList("kafka");
 
     public TwitterProducer() {
     }
@@ -47,6 +52,19 @@ public class TwitterProducer {
         client.connect();
 
         //create kafka producer
+        KafkaProducer<String, String> producer = createKafkaProducer();
+
+        //add shutdown hook
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Stopping application...");
+            logger.info("Shutting down Twitter client...");
+            client.stop();
+            //flush and close
+            logger.info("Shutting down producer...");
+            producer.close();
+            logger.info("Done!");
+
+        }));
 
         //loop to send tweets to kafka
         // on a different thread, or multiple different threads....
@@ -59,12 +77,19 @@ public class TwitterProducer {
                 client.stop();
             }
             if (msg != null)
-                logger.info(msg);
+                producer.send(new ProducerRecord<String, String>("twitter_tweets", null, msg), new Callback() {
+                    public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+                        // Executes every time a record is successfully sent or except is thrown
+                        if (e != null) { //if error
+                            logger.error("Error while producing", e);
+
+                        }
+                    }
+                });
+            logger.info(msg);
         }
         logger.info("End of application");
     }
-
-
 
 
     public Client createTwitterClient(BlockingQueue<String> msgQueue) {
@@ -74,7 +99,7 @@ public class TwitterProducer {
         Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
         StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
         // Optional: set up some followings and track terms
-        List<String> terms = Lists.newArrayList("bitcoin", "api");
+
         hosebirdEndpoint.trackTerms(terms);
 
         // These secrets should be read from a config file (https://developer.twitter.com/en/apps/17290519)
@@ -91,6 +116,24 @@ public class TwitterProducer {
         Client hosebirdClient = builder.build();
         return hosebirdClient;
 
+
+    }
+
+
+    public KafkaProducer<String, String> createKafkaProducer() {
+        String bootstrapServer = "127.0.0.1:9092";
+
+        //create producer properties
+        Properties properties = new Properties();
+
+        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
+        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+        //create producer
+        KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
+
+        return producer;
 
     }
 }
