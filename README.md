@@ -39,6 +39,14 @@ Using Code (example of running producer)
 - Open the codebase (intellij) and navigate to ``src/main/java/com/github/fggreeff/kafka/tutorial1/``
 - Run the ``ProducerDemo`` file by right-clicking on the file and choose `Run`
 
+- ProducerDemo - produce a message 
+- ProducerDemoWithCallback - produce messages, capture status of delivery for each message 
+- ProducerDemoWithKeys - produce messages associated with a key to go to the same partition
+
+- ConsumerDemo - consume a message
+- ConsumerDemoGroups - consume messages for a group
+- ConsumerDemoWithThread - consume messages using multiple threads (each consumer has it's own thread)
+- ConsumerDemoAssignSeek -  consumer. This doesn't use a groupid or subscribe to a topic. This is used to replay data or fetch a specific message 
 
 ### Producer
 
