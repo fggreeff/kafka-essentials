@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 Take note of the location where kafka is installed
 
 - Java IDE - e.g IntelliJ
-
+- Create elastic search cluster (Can use [bonsai](https://bonsai.io/)) 
 
 ## Installing
 
@@ -36,8 +36,13 @@ Delete topic (Don't do this in windows) ```kafka-topics.sh --zookeeper 127.0.0.1
 
 ### Run code scripts
 
+The project has two modules: 
+- kafka-basics
+- kafka-producer-twitter
+
+#### kafka-basics
 Using Code (example of running producer)
-- Open the codebase (intellij) and navigate to ``src/main/java/com/github/fggreeff/kafka/tutorial1/``
+- Open the codebase (intellij) and navigate to ``kafka-basics/src/main/java/kafka.tutorial1``
 - Run the ``ProducerDemo`` file by right-clicking on the file and choose `Run`
 
 - ProducerDemo - produce a message 
@@ -48,6 +53,9 @@ Using Code (example of running producer)
 - ConsumerDemoGroups - consume messages for a group
 - ConsumerDemoWithThread - consume messages using multiple threads (each consumer has it's own thread)
 - ConsumerDemoAssignSeek -  consumer. This doesn't use a groupid or subscribe to a topic. This is used to replay data or fetch a specific message 
+
+#### kafka-producer-twitter
+- TwitterProducer - Produce tweets
 
 ### Producer
 
@@ -109,5 +117,4 @@ Here are some properties to consider changing for optimising kafka
 - BATCH_SIZE_CONFIG
 
 # Source
-
 [Apache Kafka 2.0](https://www.udemy.com/course/apache-kafka/)
