@@ -102,6 +102,12 @@ echo isro  | nc <zookeeper ip> 2181
 Alternative to using the CLI to manage kafka, there is a UI:
 [Kafka Manager](https://github.com/yahoo/kafka-manager)
 
+### Optimisation 
+Here are some properties to consider changing for optimising kafka
+- COMPRESSION_TYPE_CONFIG
+- LINGER_MS_CONFIG
+- BATCH_SIZE_CONFIG
+
 # Source
 
 [Apache Kafka 2.0](https://www.udemy.com/course/apache-kafka/)
