@@ -12,13 +12,14 @@ These instructions will get you a copy of the project up and running on your loc
 Take note of the location where kafka is installed
 
 - Java IDE - e.g IntelliJ
-
+- Create elastic search cluster (Can use [bonsai](https://bonsai.io/)) 
 
 ## Installing
 
 Step by step instructions on how to get a working version of the project on your local machine, such as
 
 - Clone repository
+- Run `mvn clean install` - see if there are any errors
 - Start Zookeeper server `zookeeper-server-start.sh config/zookeeper.properties` or for homebrew use `zkServer start`
 - Start Kafka service `kafka-server-start.sh config/server.properties`
 - Start consumer `kafka-console-consumer.sh --bootstrap-server <127.0.0.1:9092> --topic <my_topic> --group <my_consumer_gp>`
@@ -35,8 +36,13 @@ Delete topic (Don't do this in windows) ```kafka-topics.sh --zookeeper 127.0.0.1
 
 ### Run code scripts
 
+The project has two modules: 
+- kafka-basics
+- kafka-producer-twitter
+
+#### kafka-basics
 Using Code (example of running producer)
-- Open the codebase (intellij) and navigate to ``src/main/java/com/github/fggreeff/kafka/tutorial1/``
+- Open the codebase (intellij) and navigate to ``kafka-basics/src/main/java/kafka.tutorial1``
 - Run the ``ProducerDemo`` file by right-clicking on the file and choose `Run`
 
 - ProducerDemo - produce a message 
@@ -47,6 +53,9 @@ Using Code (example of running producer)
 - ConsumerDemoGroups - consume messages for a group
 - ConsumerDemoWithThread - consume messages using multiple threads (each consumer has it's own thread)
 - ConsumerDemoAssignSeek -  consumer. This doesn't use a groupid or subscribe to a topic. This is used to replay data or fetch a specific message 
+
+#### kafka-producer-twitter
+- TwitterProducer - Produce tweets
 
 ### Producer
 
@@ -62,6 +71,12 @@ kafka-console-producer --broker-list 127.0.0.1:9092 --topic TOPIC_NAME --propert
 > key,value
 > another key,another value
 ```
+
+A little more on acks:
+- `acks=0` is performant, useful on metrics & logging (cases where we can manage losing a msg if needs be)
+- `acks=1` is the default, the leader acknowledges every request
+- `acks=all` the replicas  acknowledges, this adds latency & guarantees. (set min.insync.replicas)
+
 
 ### Consumer
 
@@ -95,6 +110,11 @@ echo isro  | nc <zookeeper ip> 2181
 Alternative to using the CLI to manage kafka, there is a UI:
 [Kafka Manager](https://github.com/yahoo/kafka-manager)
 
-# Source
+### Optimisation 
+Here are some properties to consider changing for optimising kafka
+- COMPRESSION_TYPE_CONFIG
+- LINGER_MS_CONFIG
+- BATCH_SIZE_CONFIG
 
+# Source
 [Apache Kafka 2.0](https://www.udemy.com/course/apache-kafka/)
