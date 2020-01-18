@@ -55,7 +55,7 @@ Using Code (example of running producer)
 - ConsumerDemoAssignSeek -  consumer. This doesn't use a groupid or subscribe to a topic. This is used to replay data or fetch a specific message 
 
 #### kafka-producer-twitter
-- TwitterProducer - Produce tweets
+- TwitterProducer - Produce tweets to elastic search (setup in bonsai required). Consumer processing is idempotent
 
 ### Producer
 
@@ -88,7 +88,7 @@ Create a consumer group for consumption: ```kafka-console-consumer.sh --bootstra
 
 List consumer groups: ```kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --list```
 
-More info on consumer group: ```kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --describe --group GROUP_NAME```
+More info on consumer group (view: partitions, lag, offsets): ```kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --describe --group GROUP_NAME```
 Useful command to answer questions such as: What is my lag? Which service is currently consuming from this group?
 
 Reset offset by using: `--reset-offsets`
