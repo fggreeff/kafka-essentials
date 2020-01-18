@@ -55,7 +55,11 @@ Using Code (example of running producer)
 - ConsumerDemoAssignSeek -  consumer. This doesn't use a groupid or subscribe to a topic. This is used to replay data or fetch a specific message 
 
 #### kafka-producer-twitter
-- TwitterProducer - Produce tweets to elastic search (setup in bonsai required). Consumer processing is idempotent
+- TwitterProducer - Produce tweets to a topic
+
+#### kafka-consumer-elasticsearch
+- TwitterProducer - Consume tweets from a topic and put on elastic search (setup in bonsai required). Consumer processing is idempotent, optimised for batching whilst committing offsets manually 
+
 
 ### Producer
 
