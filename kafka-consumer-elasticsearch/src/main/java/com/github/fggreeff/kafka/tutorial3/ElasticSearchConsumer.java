@@ -12,8 +12,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
@@ -69,7 +70,7 @@ public class ElasticSearchConsumer {
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false"); // disable auto commit of offsets
-        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "10"); // disable auto commit of offsets
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100"); // disable auto commit of offsets
 
         // create consumer
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
@@ -89,52 +90,54 @@ public class ElasticSearchConsumer {
             ConsumerRecords<String, String> records =
                     consumer.poll(Duration.ofMillis(100)); // new in Kafka 2.0.0
 
-            logger.info("Received " + records.count() + " records");
+            Integer recordCount = records.count();
+            logger.info("Received " + recordCount + " records");
 
-//            BulkRequest bulkRequest = new BulkRequest();
+            BulkRequest bulkRequest = new BulkRequest();
 
             for (ConsumerRecord<String, String> record : records) {
                 // Insert data into elastic search
 
-                //2 strategies
-                // kafka generic ID
-                //String id = record.topic() + "_" + record.partition() + "_" +  record.offset();
-
-                // twitter feed specific id
-                String id = extractIdFromTweet(record.value());
-
-                IndexRequest indexRequest = new IndexRequest("twitter", "tweets", id // this is to make our consumer idempotent
-                ).source(record.value(), XContentType.JSON);
-
-                IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-
-                logger.info(indexResponse.getId());
                 try {
-                    Thread.sleep(10); //introduce small delay
+
+                    // Two strategies:
+                    // 1. kafka generic ID
+                    //    String id = record.topic() + "_" + record.partition() + "_" +  record.offset();
+
+                    // 2. twitter feed specific id
+                    String id = extractIdFromTweet(record.value());
+
+                    IndexRequest indexRequest = new IndexRequest("twitter", "tweets", id // this is to make our consumer idempotent
+                    ).source(record.value(), XContentType.JSON);
+
+                    bulkRequest.add(indexRequest); // optimise performance using batching
+                } catch (NullPointerException e) {
+                    logger.warn("skipping bad data: " + record.value()); //There isn't a unique ID
+                }
+            }
+            if (recordCount > 0) {
+                BulkResponse bulkItemResponses = client.bulk(bulkRequest, RequestOptions.DEFAULT);
+                logger.info("Bulk response: " + bulkItemResponses.toString());
+
+                logger.info("committing offsets...");
+                consumer.commitSync();
+                logger.info("offsets have been committed");
+                try {
+                    Thread.sleep(1000); //introduce small delay
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
             }
-            logger.info("committing offsets...");
-            consumer.commitSync();
-            logger.info("offsets have been committed");
-            try {
-                Thread.sleep(1000); //introduce small delay
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
 
         }
 
-        //close client gracefully 1217462239365648384
+        //close client gracefully
         //client.close();
     }
 
     private static JsonParser jsonParser = new JsonParser();
 
-    private static String extractIdFromTweet(String tweetJson){
+    private static String extractIdFromTweet(String tweetJson) {
         // gson library
         return jsonParser.parse(tweetJson)
                 .getAsJsonObject()
