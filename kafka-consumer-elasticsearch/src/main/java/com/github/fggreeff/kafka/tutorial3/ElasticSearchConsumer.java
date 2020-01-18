@@ -34,7 +34,7 @@ public class ElasticSearchConsumer {
     public static RestHighLevelClient createClient() {
 
         // BONSAI / HOSTED ELASTICSEARCH
-        // replace with your own credentials
+        // replace with your own credentials - These have been revoked
         String hostname = "kafka-course-7515456416.eu-west-1.bonsaisearch.net";
         String username = "VcX7zoYdL3"; // needed only for bonsai
         String password = "7xMnksCZS534zvWq"; // needed only for bonsai
