@@ -92,6 +92,7 @@ More info on consumer group (view: partitions, lag, offsets): ```kafka-consumer-
 Useful command to answer questions such as: What is my lag? Which service is currently consuming from this group?
 
 Reset offset by using: `--reset-offsets`
+```kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --group GROUP_NAME --topic TOPIC_NAME --reset-offsets --execute --to-earliest```
 
 Consumer with Keys: 
 ```
