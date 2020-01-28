@@ -55,7 +55,11 @@ Using Code (example of running producer)
 - ConsumerDemoAssignSeek -  consumer. This doesn't use a groupid or subscribe to a topic. This is used to replay data or fetch a specific message 
 
 #### kafka-producer-twitter
-- TwitterProducer - Produce tweets
+- TwitterProducer - Produce tweets to a topic
+
+#### kafka-consumer-elasticsearch
+- TwitterProducer - Consume tweets from a topic and put on elastic search (setup in bonsai required). Consumer processing is idempotent, optimised for batching whilst committing offsets manually 
+
 
 ### Producer
 
@@ -88,10 +92,11 @@ Create a consumer group for consumption: ```kafka-console-consumer.sh --bootstra
 
 List consumer groups: ```kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --list```
 
-More info on consumer group: ```kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --describe --group GROUP_NAME```
+More info on consumer group (view: partitions, lag, offsets): ```kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --describe --group GROUP_NAME```
 Useful command to answer questions such as: What is my lag? Which service is currently consuming from this group?
 
 Reset offset by using: `--reset-offsets`
+```kafka-consumer-groups.sh --bootstrap-server 127.0.0.1:9092 --group GROUP_NAME --topic TOPIC_NAME --reset-offsets --execute --to-earliest```
 
 Consumer with Keys: 
 ```
@@ -118,3 +123,5 @@ Here are some properties to consider changing for optimising kafka
 
 # Source
 [Apache Kafka 2.0](https://www.udemy.com/course/apache-kafka/)
+[Kafka connectors](https://www.confluent.io/product/connectors-repository/)
+[Twitter connector](https://github.com/jcustenborder/kafka-connect-twitter)
