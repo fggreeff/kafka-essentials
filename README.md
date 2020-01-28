@@ -123,3 +123,5 @@ Here are some properties to consider changing for optimising kafka
 
 # Source
 [Apache Kafka 2.0](https://www.udemy.com/course/apache-kafka/)
+[Kafka connectors](https://www.confluent.io/product/connectors-repository/)
+[Twitter connector](https://github.com/jcustenborder/kafka-connect-twitter)
