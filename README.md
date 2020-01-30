@@ -68,6 +68,15 @@ Using Code (example of running producer)
 
 `connect-standalone connect-standalone.properties twitter.properties`
 
+#### kafka-streams-filter-tweets
+- StreamsFilterTweets - Making use of Kafka streams to filter twitter messages
+
+Run `TwitterProducer` to produce tweets
+
+Run `StreamsFilterTweets` to filter tweets with over 1000 followers and put on topic 'important_tweets'
+
+Run Consumer for topic 'important_tweets' `kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic important_tweets --from-beginning`
+
 ### Producer
 
 Using kafka commands
@@ -130,6 +139,9 @@ Here are some properties to consider changing for optimising kafka
 
 # Source
 [Apache Kafka 2.0](https://www.udemy.com/course/apache-kafka/)
+
 [kafka-beginners-course](https://github.com/simplesteph/kafka-beginners-course)
+
 [Kafka connectors](https://www.confluent.io/product/connectors-repository/)
+
 [Twitter connector](https://github.com/jcustenborder/kafka-connect-twitter)
