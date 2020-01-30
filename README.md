@@ -12,7 +12,8 @@ These instructions will get you a copy of the project up and running on your loc
 Take note of the location where kafka is installed
 
 - Java IDE - e.g IntelliJ
-- Create elastic search cluster (Can use [bonsai](https://bonsai.io/)) 
+- Create elastic search cluster (Can use [bonsai](https://bonsai.io/)). Generate auth keys
+- Twitter keys for API usage - [Generate new keys](https://developer.twitter.com/en/apps/)
 
 ## Installing
 
@@ -60,6 +61,12 @@ Using Code (example of running producer)
 #### kafka-consumer-elasticsearch
 - TwitterProducer - Consume tweets from a topic and put on elastic search (setup in bonsai required). Consumer processing is idempotent, optimised for batching whilst committing offsets manually 
 
+#### kafka-connect
+- Kafka-connect - Making use of a Twitter connector to produce a stream of tweets onto a topic
+
+`cd kafka-essentials/kafka-connect`
+
+`connect-standalone connect-standalone.properties twitter.properties`
 
 ### Producer
 
@@ -123,5 +130,6 @@ Here are some properties to consider changing for optimising kafka
 
 # Source
 [Apache Kafka 2.0](https://www.udemy.com/course/apache-kafka/)
+[kafka-beginners-course](https://github.com/simplesteph/kafka-beginners-course)
 [Kafka connectors](https://www.confluent.io/product/connectors-repository/)
 [Twitter connector](https://github.com/jcustenborder/kafka-connect-twitter)
