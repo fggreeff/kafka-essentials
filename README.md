@@ -149,3 +149,5 @@ Here are some properties to consider changing for optimising kafka
 # Extra
 
 [Which kafka to use?](https://medium.com/@stephane.maarek/the-kafka-api-battle-producer-vs-consumer-vs-kafka-connect-vs-kafka-streams-vs-ksql-ef584274c1e)
+
+[Naming convention for topics](https://medium.com/@criccomini/how-to-paint-a-bike-shed-kafka-topic-naming-conventions-1b7259790073)
