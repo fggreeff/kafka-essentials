@@ -145,3 +145,7 @@ Here are some properties to consider changing for optimising kafka
 [Kafka connectors](https://www.confluent.io/product/connectors-repository/)
 
 [Twitter connector](https://github.com/jcustenborder/kafka-connect-twitter)
+
+# Extra
+
+[Which kafka to use?](https://medium.com/@stephane.maarek/the-kafka-api-battle-producer-vs-consumer-vs-kafka-connect-vs-kafka-streams-vs-ksql-ef584274c1e)
