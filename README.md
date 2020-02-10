@@ -4,6 +4,7 @@ Apache Kafka 2.0 Ecosystem, Core Concepts, Real World Java Producers/Consumers &
 ## Getting started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See the deployment section for notes on how to deploy the project on a live system.
+For a single-node development environment setup, have a look at the confluent setup section.
 
 ## Prerequisites
 
@@ -120,6 +121,7 @@ kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic TOPIC_NAME --fr
 ```
 
 ### Zookeeper
+
 Validate Zookeeper running / health 
 ```
 echo stat | nc <zookeeper ip> 2181
@@ -128,14 +130,57 @@ echo isro  | nc <zookeeper ip> 2181
 ```
 
 ### UI
+
 Alternative to using the CLI to manage kafka, there is a UI:
 [Kafka Manager](https://github.com/yahoo/kafka-manager)
 
 ### Optimisation 
+
 Here are some properties to consider changing for optimising kafka
 - COMPRESSION_TYPE_CONFIG
 - LINGER_MS_CONFIG
 - BATCH_SIZE_CONFIG
+
+### Security
+
+- Encryption: Use SSL encryption port 9093 for brokers
+- Authenticate: SSL auth or SASL auth (plain, kerberos, Scram)
+- ACL (Access control list): Auth to read / write topics
+
+### Advanced topic configuration
+
+View configuration on a topics: 
+```kafka-configs --zookeeper 127.0.0.1:2181 --entity-type TOPIC_NAME --describe```
+
+Add configuration on a topics: 
+```kafka-configs --zookeeper 127.0.0.1:2181 --entity-type TOPIC_NAME --add-config CONFIG_TO_ADD --alter```
+
+Delete configuration on a topics: 
+```kafka-configs --zookeeper 127.0.0.1:2181 --entity-type TOPIC_NAME --delete-config CONFIG_TO_ADD --alter```
+
+Min InSync replicas (can be set at broker or topic level)
+- Topic: Add `min.insync.replicas` configuration on a topics: ```kafka-configs --zookeeper 127.0.0.1:2181 --entity-type topics --entity-name TOPIC_NAME --add-config min.insync.replicas=2 --alter```
+- Broker: cd `kafka` folder, open `vim config/server.properties` and set `min.insync.replicas=2`
+
+Partitions & segments
+- log.segments.bytes: How fast will I have new segments based on throughput? 
+- log.segments.ms: How often should log compaction happen? 
+
+Logs
+- log.cleanup.policy: How often should logs be cleaned up. Take note of CPU/memory usage
+- log.retention.hours: Number of hours to keep data for (Default 1 week)
+- log.retention.bytes: Max size for each partition (Default -1 (Infinite))
+
+### Confluent setup (Under 5min)
+A single-node development environment for linux or MacOS. 
+- Install [Confluent CLI](https://docs.confluent.io/current/cli/cli-autocompletion.html#macos) 
+- Start ZK, Kafka, Kstreams, KSQL, UI: `./confluent local start`. To start ZK & kafka only, run `./confluent local start kafka` 
+- Stop all services: `./confluent local stop` 
+- Delete / Destroy: `./confluent local destroy`
+
+### Dockerised ZK / Kafka 
+[Start Kafka using Docker](https://github.com/simplesteph/kafka-stack-docker-compose)
+
 
 # Source
 [Apache Kafka 2.0](https://www.udemy.com/course/apache-kafka/)
@@ -146,6 +191,8 @@ Here are some properties to consider changing for optimising kafka
 
 [Twitter connector](https://github.com/jcustenborder/kafka-connect-twitter)
 
-# Extra
+### Advanced topic configuration
+[List of config](https://kafka.apache.org/documentation/#configuration)
 
+### Extra
 [Which kafka to use?](https://medium.com/@stephane.maarek/the-kafka-api-battle-producer-vs-consumer-vs-kafka-connect-vs-kafka-streams-vs-ksql-ef584274c1e)
